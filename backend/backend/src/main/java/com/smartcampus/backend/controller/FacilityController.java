@@ -1,0 +1,46 @@
+package com.smartcampus.backend.controller;
+
+import com.smartcampus.backend.model.Facility;
+import com.smartcampus.backend.service.FacilityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+@RestController
+@RequestMapping("/api/facilities")
+@CrossOrigin(origins = "*")
+
+public class FacilityController {
+
+    @Autowired
+    private FacilityService facilityService;
+
+    // 1. GET:(Read All)
+    @GetMapping
+    public List<Facility> getAllFacilities() {
+        return facilityService.getAllFacilities();
+    }
+
+    // 2. POST:(Create)
+    @PostMapping
+    public Facility createFacility(@RequestBody Facility facility) {
+        return facilityService.saveFacility(facility);
+    }
+
+    // 3. GET: ID (Read Single)
+    @GetMapping("/{id}")
+    public ResponseEntity<Facility> getFacilityById(@PathVariable Long id) {
+        return facilityService.getFacilityById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFacility(@PathVariable Long id) {
+        facilityService.deleteFacility(id);
+        return ResponseEntity.ok("Facility deleted successfully!");
+    }
+    
+}
