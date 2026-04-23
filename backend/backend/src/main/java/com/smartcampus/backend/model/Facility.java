@@ -24,7 +24,7 @@ public class Facility {
     @Column(nullable = false)
     private String location;
 
-    private int capacity;
+    private Integer capacity;
 
     private String description;
 
