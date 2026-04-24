@@ -4,6 +4,7 @@ import com.smartcampus.backend.model.Asset;
 import com.smartcampus.backend.repository.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -23,5 +24,13 @@ public class AssetService {
 
     public List<Asset> getAssetsByFacility(Long facilityId) {
         return assetRepository.findByFacilityId(facilityId);
+    }
+
+    public Optional<Asset> getAssetById(Long id) {
+        return assetRepository.findById(id);
+    }
+
+    public void deleteAsset(Long id) {
+        assetRepository.deleteById(id);
     }
 }

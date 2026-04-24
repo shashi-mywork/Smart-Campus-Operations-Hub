@@ -42,5 +42,23 @@ public class FacilityController {
         facilityService.deleteFacility(id);
         return ResponseEntity.ok("Facility deleted successfully!");
     }
+
+    // 4. PUT: ID (Update)
+@PutMapping("/{id}")
+public ResponseEntity<Facility> updateFacility(@PathVariable Long id, @RequestBody Facility facilityDetails) {
+    return facilityService.getFacilityById(id)
+            .map(facility -> {
+                facility.setName(facilityDetails.getName());
+                facility.setType(facilityDetails.getType());
+                facility.setLocation(facilityDetails.getLocation());
+                facility.setCapacity(facilityDetails.getCapacity());
+                facility.setDescription(facilityDetails.getDescription());
+                facility.setStatus(facilityDetails.getStatus());
+                
+                Facility updatedFacility = facilityService.saveFacility(facility);
+                return ResponseEntity.ok(updatedFacility);
+            })
+            .orElse(ResponseEntity.notFound().build());
+}
     
 }

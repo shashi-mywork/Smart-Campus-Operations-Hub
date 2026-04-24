@@ -1,5 +1,8 @@
 package com.smartcampus.backend.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +12,9 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+
+
 public class Facility {
 
     @Id
@@ -28,5 +34,11 @@ public class Facility {
 
     private String description;
 
-    private String status = "AVAILABLE"; 
+    private String status = "AVAILABLE";
+
+    @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("facility")
+    private List<Asset> assets;
+    
+    
 }

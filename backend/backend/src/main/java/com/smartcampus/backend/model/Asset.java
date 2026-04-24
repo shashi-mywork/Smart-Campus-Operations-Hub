@@ -28,6 +28,6 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "facility_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties("assets")
     private Facility facility;
 }
