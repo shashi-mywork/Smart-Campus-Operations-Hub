@@ -21,7 +21,7 @@ public class Asset {
     private String assetName;
 
     @Column(nullable = false, unique = true)
-    private String assetTag; // උදා: UOK-IT-001
+    private String assetTag; 
 
     @Column(nullable = false)
     private String assetCondition; // GOOD, FAULTY, REPAIRING
