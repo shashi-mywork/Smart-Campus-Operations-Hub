@@ -136,10 +136,7 @@ const App = () => {
             <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Total Units</p>
             <p className="text-4xl font-black text-slate-900">{locations.length}</p>
           </div>
-          <div className="bg-blue-600 p-6 rounded-3xl shadow-xl shadow-blue-100">
-            <p className="text-xs font-black text-blue-100 uppercase tracking-widest mb-2">System Status</p>
-            <p className="text-4xl font-black text-white italic tracking-tighter">Operational</p>
-          </div>
+          
         </section>
 
         {/* Facility List */}

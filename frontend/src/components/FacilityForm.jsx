@@ -51,6 +51,8 @@ const FacilityForm = ({ formData, onChange, onSubmit, onClose, isEdit }) => {
                   <option value="LAB">Laboratory</option>
                   <option value="LECTURE_HALL">Lecture Hall</option>
                   <option value="OFFICE">Office</option>
+                  <option value="AUDITORIUM">Auditorium</option>
+                  <option value="CANTEEN">Canteen</option>
                 </select>
               </div>
               <div>
