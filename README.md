@@ -1,5 +1,5 @@
 SmartCampus Resource Hub
-A full-stack web application designed to manage university facilities such as laboratories, lecture halls, and offices. This system allows administrators to track resource availability and manage campus infrastructure efficiently.
+A full-stack web application designed to manage university facilities such as laboratories, lecture halls, offices, Auditoriums and Canteens. This system allows administrators to track resource availability and manage campus infrastructure efficiently.
 
 🚀 Features
 Modern Dashboard: A clean overview of all campus facilities and their current status.
