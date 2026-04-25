@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import API from './api';
 import { Layout, MapPin, Activity, Plus, Search, Bell } from 'lucide-react';
+import FacilityList from './components/FacilityList';
+import FacilityForm from './components/FacilityForm';
+
 
 const App = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    location: '',
+    type: 'LAB',
+    status: 'AVAILABLE',
+    capacity: 0,
+  });
+  const [editingItem, setEditingItem] = useState(null);
 
   // Fetch facilities data from backend API
   const syncRegistry = async () => {
@@ -30,6 +42,48 @@ const App = () => {
       </div>
     </div>
   );
+
+  const handleSubmit = async (e) => { 
+    e.preventDefault();
+    try {
+      if (editingItem) {
+        await API.put(`/facilities/${editingItem.id}`, formData);
+        alert("Facility updated successfully!");
+      } else {
+        await API.post('/facilities', formData);
+        alert("Facility Added successfully!");
+      }
+      setIsModalOpen(false);
+      setEditingItem(null);
+      setFormData({ name: '', location: '', type: 'LAB', status: 'AVAILABLE', capacity: 0 });
+      syncRegistry(); // Refresh data after submission
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this facility?")) {
+      try {
+        await API.delete(`/facilities/${id}`);
+        alert("Facility deleted successfully!");
+        syncRegistry(); // data Refresh
+        } catch (err) {
+          alert("Error: Could not delete the facility.");
+      }
+    }
+  }
+
+  const handleOpenEdit = (facility) => {
+    console.log("Editing facility:", facility);
+    setEditingItem(facility); 
+    setFormData(facility);    // filled fields in Form 
+    setIsModalOpen(true);     // Open modal for editing
+  };
+
+
+
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100">
@@ -59,8 +113,9 @@ const App = () => {
             <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
               <Bell size={20} />
             </button>
-            <button className="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-800 transition-all active:scale-95 shadow-md">
-              <Plus size={18} /> New Entry
+            <button onClick={() => setIsModalOpen(true)}
+              className="bg-slate-900 text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2">       
+              <Plus size={20} /> New Facility Entry
             </button>
           </div>
         </div>
@@ -87,38 +142,32 @@ const App = () => {
           </div>
         </section>
 
-        {/* Resource Grid */}
+        {/* Facility List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {locations.map((loc) => (
-            <div key={loc.id} className="group bg-white border border-slate-200 rounded-[2rem] p-7 hover:border-blue-400 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:bg-blue-50 transition-colors duration-500"></div>
-              
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-6">
-                  <div className={`p-3 rounded-2xl ${loc.type === 'LAB' ? 'bg-indigo-50 text-indigo-600' : 'bg-orange-50 text-orange-600'}`}>
-                    <Activity size={24} />
-                  </div>
-                  <span className={`text-[10px] font-black px-3 py-1.5 rounded-full tracking-wider shadow-sm ${
-                    loc.status === 'AVAILABLE' 
-                    ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200' 
-                    : 'bg-rose-50 text-rose-700 ring-1 ring-rose-200'
-                  }`}>
-                    {loc.status}
-                  </span>
-                </div>
-                
-                <h3 className="text-2xl font-black text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">{loc.name}</h3>
-                                <div className="flex items-center gap-2 text-slate-400 text-sm mb-8">
-                                  <MapPin size={16} className="text-slate-300" />
-                                  <p className="text-slate-500">{loc.location}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </main>
-                    </div>
-                  );
-                };
-                
-                export default App;
+            <FacilityList
+              key={loc.id} 
+              facility={loc} 
+              onEdit={handleOpenEdit} 
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+  
+
+          {/* Facility Form Modal */}
+          {isModalOpen && (
+              <FacilityForm 
+                  formData={formData} 
+                  onChange={(e) => setFormData({ ...formData, [e.target.name]: e.target.value })}
+                  onSubmit={handleSubmit}
+                  onClose={() => setIsModalOpen(false)}
+                  isEdit={!!editingItem}
+                />
+          )}
+        </main>
+      </div>
+    );
+  };
+  
+  export default App;
