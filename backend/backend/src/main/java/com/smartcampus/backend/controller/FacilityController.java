@@ -43,7 +43,7 @@ public class FacilityController {
         return ResponseEntity.ok("Facility deleted successfully!");
     }
 
-    // 4. PUT: ID (Update)
+    // 4. PUT
 @PutMapping("/{id}")
 public ResponseEntity<Facility> updateFacility(@PathVariable Long id, @RequestBody Facility facilityDetails) {
     return facilityService.getFacilityById(id)
